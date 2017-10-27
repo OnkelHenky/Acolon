@@ -5,6 +5,7 @@
 function messUpwords() {
 
     console.log('window.jQuery = ' +window.jQuery);
+    alert('window.jQuery = ' +window.jQuery);
 
     if(!window.jQuery) {
 
@@ -172,7 +173,8 @@ document.querySelector('html').addEventListener("drop", function( event ) {
     event.preventDefault();
     var data = event.dataTransfer.getData("text");
 
-  //  console.log('data = '+data);
+    console.log(' Drop event = ');
+    alert('Drop Event');
     messUpwords();
 
 }, false);
