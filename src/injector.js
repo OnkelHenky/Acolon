@@ -4,19 +4,11 @@
 
 function messUpwords() {
 
-    console.log('window.jQuery = ' +window.jQuery);
-    alert('window.jQuery = ' +window.jQuery);
-
     if(!window.jQuery) {
-
-        var v='3.1.1';
-
+        /*jQuery auf der Webseite NICHT vorhanden*/
+        var jQuery_version='3.1.1';
         var done=false;
-
-        console.log('window.jQuery = ' +window.jQuery);
-
         var script=document.createElement('script');
-
         script.onload = script.onreadystatechange = function(){
             if(!done&&(!script.readyState||script.readyState==='loaded'||script.readyState==='complete')){
                 console.log('readyState = ' +script.readyState);
@@ -25,27 +17,16 @@ function messUpwords() {
             }
         };
 
-        script.src='//code.jquery.com/jquery-'+v+'.min.js';
+        script.src='//code.jquery.com/jquery-'+jQuery_version+'.min.js';
         document.getElementsByTagName('head')[0].appendChild(script)
 
     }else{
-       // alert("jqzery is da");
+        /*jQuery auf der Webseite vorhanden*/
         dyslexia();
     }
 
-    /*
-    var v='3.1.1';
-    if(window.jQuery===undefined||window.jQuery.fn.jquery<v) {
-
-    }else{
-        dyslexia();
-    }
-
-*/
     function dyslexia() {
 
-      //  alert("Execute dsylexisa");
-       // alert(window.jQuery);
     var getTextNodesIn = function(el) {
 
         return $(el).find(":not(iframe,script)").addBack().contents().filter(function() {
@@ -149,7 +130,6 @@ document.querySelector('html').addEventListener("dragenter", function( event ) {
         //   event.target.style.border = "6px dashed red";
         // event.target.style.opacity = "1.0";
         //}
-
 }, false);
 
 document.querySelector('html').addEventListener("dragleave", function( event ) {
@@ -158,22 +138,17 @@ document.querySelector('html').addEventListener("dragleave", function( event ) {
    // event.target.style.background = "green";
     //event.target.style.opacity = "0.5";
     //}
-
 }, false);
 
 
 
 document.querySelector('html').addEventListener("drop", function( event ) {
-   // alert(window.jQuery);
     // prevent default action (open as link for some elements)
     event.preventDefault();
-    console.dir('event ='+event);
     console.dir(event);
-
     event.preventDefault();
     var data = event.dataTransfer.getData("text");
-
-    console.log(' Drop event = ');
+    console.log(' data event = ' + data);
     alert('Drop Event');
     messUpwords();
 
