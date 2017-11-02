@@ -4,38 +4,17 @@
 
 function messUpwords() {
 
-    if(!window.jQuery) {
-        /*jQuery auf der Webseite NICHT vorhanden*/
-        var jQuery_version='3.1.1';
-        var done=false;
-        var script=document.createElement('script');
-        script.onload = script.onreadystatechange = function(){
-            if(!done&&(!script.readyState||script.readyState==='loaded'||script.readyState==='complete')){
-                console.log('readyState = ' +script.readyState);
-                done=true;
-                dyslexia();
-            }
-        };
 
-        script.src='//code.jquery.com/jquery-'+jQuery_version+'.min.js';
-        document.getElementsByTagName('head')[0].appendChild(script)
-
-    }else{
-        /*jQuery auf der Webseite vorhanden*/
-        dyslexia();
-    }
-
-    function dyslexia() {
-
-    var getTextNodesIn = function(el) {
-
-        return $(el).find(":not(iframe,script)").addBack().contents().filter(function() {
-            return this.nodeType === 3;
-        });
+    var getTextNodesIn = function(parent) {
+        var all = [];
+        for (parent = parent.firstChild; parent; parent = parent.nextSibling) {
+            if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) continue;
+            if (parent.nodeType === Node.TEXT_NODE) all.push(parent);
+            else all = all.concat(getTextNodesIn(parent));
+        }
+        return all;
     };
-
-   // var textNodes = document.querySelectorAll("p, h1, h2, h3");
-    var textNodes = getTextNodesIn($("*"));
+    var textNodes = getTextNodesIn(document.querySelector("body"));
 
     function isLetter(char) {
         return /^[\d]$/.test(char);
@@ -113,8 +92,7 @@ function messUpwords() {
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
-    setInterval(messUpWords, 50);
-}
+    setInterval(messUpWords, 75);
 
 }
 
@@ -149,7 +127,5 @@ document.querySelector('html').addEventListener("drop", function( event ) {
     event.preventDefault();
     var data = event.dataTransfer.getData("text");
     console.log(' data event = ' + data);
-    alert('Drop Event');
     messUpwords();
-
 }, false);

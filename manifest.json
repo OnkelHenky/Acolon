@@ -20,7 +20,7 @@
   ],
 
   "content_scripts": [ {
-    "js": ["src/injector.js","src/libs/jquery-3.1.1.min.js"],
+    "js": ["src/injector.js"],
     "matches": [ "http://*/*", "https://*/*"]
   }]
 }
