@@ -101,10 +101,15 @@ let messUpWords =  function () {
 
     /*
      * Set the time interval for mess up words.
+     * The speed.
      */
     setInterval(messUpWords, 75);
 };
 
+/**
+ * A dictionary of all available barriers.
+ * @type {messUpWords}
+ */
 Barriers['messUPWords'] = messUpWords;
 
 /* events fired on the drop targets */
