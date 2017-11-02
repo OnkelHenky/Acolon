@@ -86,34 +86,13 @@ function drop(ev) {
     ev.dataTransfer.clearData();
 }
 
-function t(){
-    console.log('HAHAHA');
-
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-""
-    /*
-    document.querySelector('#yes-drop').addEventListener('drag', drag);
-    document.querySelector('#outer-dropzone').addEventListener('dragover', allowDrop);
-    document.querySelector('#outer-dropzone').addEventListener('drop', drop);
-    document.querySelector('#outer-dropzone').addEventListener("dragenter", function( event ) {
-        // highlight potential drop target when the draggable element enters it
-        if ( event.target.className == "dropzone" ) {
-            event.target.style.background = "purple";
-        }
-
-    }, false); */
-
-    var dragged;
+    let dragged;
     /* events fired on the draggable target */
-    document.querySelector('#yes-drop').addEventListener("drag", function( event ) {
-
-
-
+    document.querySelector('#messUPWords').addEventListener("drag", function( event ) {
     }, false);
 
-    document.querySelector('#yes-drop').addEventListener("dragstart", function( event ) {
+    document.querySelector('#messUPWords').addEventListener("dragstart", function( event ) {
         // store a ref. on the dragged elem
         dragged = event.target;
         event.dataTransfer.setData("text/plain", event.target.id);
@@ -122,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.target.style.opacity = .5;
     }, false);
 
-    document.querySelector('#yes-drop').addEventListener("dragend", function( event ) {
+    document.querySelector('#messUPWords').addEventListener("dragend", function( event ) {
         // reset the transparency
         event.target.style.opacity = "";
     }, false);

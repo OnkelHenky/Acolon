@@ -2,73 +2,79 @@
  * Created by alex on 12.05.17.
  */
 
-function messUpwords() {
+let Barriers = {};
 
+let messUpWords =  function () {
 
-    var getTextNodesIn = function(parent) {
-        var all = [];
+    let textNodes = getTextNodesIn(document.querySelector("html"));
+    let wordsInTextNodes = [];
+
+    /**
+     * Get the the HTML nodes containing a text node as child.
+     * @param parent the starting node.
+     * @returns {Array} All the nodes containing a text node as child.
+     */
+    function getTextNodesIn(parent) {
+        let nodes_with_text = [];
         for (parent = parent.firstChild; parent; parent = parent.nextSibling) {
-            if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) continue;
-            if (parent.nodeType === Node.TEXT_NODE) all.push(parent);
-            else all = all.concat(getTextNodesIn(parent));
+            if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) { //exclude script and style elements
+                continue;
+            }
+            if (parent.nodeType === Node.TEXT_NODE) {
+                nodes_with_text.push(parent)
+            }
+            else{
+                nodes_with_text = nodes_with_text.concat(getTextNodesIn(parent))
+            }
         }
-        return all;
-    };
-    var textNodes = getTextNodesIn(document.querySelector("body"));
-
-    function isLetter(char) {
-        return /^[\d]$/.test(char);
+        return nodes_with_text;
     }
 
-    var wordsInTextNodes = [];
-    for (var i = 0; i < textNodes.length; i++) {
-        var node = textNodes[i];
+    for (let i = 0; i < textNodes.length; i++) {
+        let node = textNodes[i];
+        let words = [];
+        let re = /\w+/g;
+        let match;
 
-        var words = []
-
-        var re = /\w+/g;
-        var match;
-        while ((match = re.exec(node.nodeValue)) != null) {
-
-            var word = match[0];
-            var position = match.index;
-
+        while ((match = re.exec(node.nodeValue)) !== null) {
+            let word = match[0];
+            let position = match.index;
             words.push({
                 length: word.length,
                 position: position
             });
         }
-
         wordsInTextNodes[i] = words;
     }
 
-
+    /**
+     * Mess up the words in the the found text nodes
+     */
     function messUpWords () {
-        for (var i = 0; i < textNodes.length; i++) {
-
-            var node = textNodes[i];
-
-            for (var j = 0; j < wordsInTextNodes[i].length; j++) {
+        for (let i = 0; i < textNodes.length; i++) {
+            let node = textNodes[i];
+            for (let j = 0; j < wordsInTextNodes[i].length; j++) {
 
                 // Only change a tenth of the words each round.
                 if (Math.random() > 1/10) {
-
                     continue;
                 }
 
-                var wordMeta = wordsInTextNodes[i][j];
+                let wordMeta = wordsInTextNodes[i][j];
 
-                var word = node.nodeValue.slice(wordMeta.position, wordMeta.position + wordMeta.length);
-                var before = node.nodeValue.slice(0, wordMeta.position);
-                var after  = node.nodeValue.slice(wordMeta.position + wordMeta.length);
+                let word = node.nodeValue.slice(wordMeta.position, wordMeta.position + wordMeta.length);
+                let before = node.nodeValue.slice(0, wordMeta.position);
+                let after  = node.nodeValue.slice(wordMeta.position + wordMeta.length);
 
                 node.nodeValue = before + messUpWord(word) + after;
             }
         }
     }
-
+    /*
+     * Mess up a single word
+     */
     function messUpWord (word) {
-        if (word.length < 3) {
+        if (word.length < 2) {
             return word;
         }
         return word[0] + messUpMessyPart(word.slice(1, -1)) + word[word.length - 1];
@@ -79,7 +85,7 @@ function messUpwords() {
             return messyPart;
         }
 
-        var a, b;
+        let a, b;
         while (!(a < b)) {
             a = getRandomInt(0, messyPart.length - 1);
             b = getRandomInt(0, messyPart.length - 1);
@@ -92,9 +98,14 @@ function messUpwords() {
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
-    setInterval(messUpWords, 75);
 
-}
+    /*
+     * Set the time interval for mess up words.
+     */
+    setInterval(messUpWords, 75);
+};
+
+Barriers['messUPWords'] = messUpWords;
 
 /* events fired on the drop targets */
 document.querySelector('html').addEventListener("dragover", function( event ) {
@@ -125,7 +136,8 @@ document.querySelector('html').addEventListener("drop", function( event ) {
     event.preventDefault();
     console.dir(event);
     event.preventDefault();
-    var data = event.dataTransfer.getData("text");
+    let data = event.dataTransfer.getData("text");
+    console.dir(event);
     console.log(' data event = ' + data);
-    messUpwords();
+    Barriers[data]();
 }, false);
