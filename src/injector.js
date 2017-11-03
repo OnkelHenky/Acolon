@@ -2,11 +2,15 @@
  * Created by alex on 12.05.17.
  */
 
+/**
+ * A dictionary with all supported barriers simulations
+ * @type {{}}
+ */
 let Barriers = {};
 
 /**
  * Mess uo words on the target web page to show reading barriers.
- * Based on the work of Victor 'geon' Widell
+ * Based on the work and with permission of Victor 'geon' Widell
  * https://github.com/geon/geon.github.com/blob/master/_posts/2016-03-03-dsxyliea.md
  */
 let messUpWords =  function () {
@@ -115,7 +119,7 @@ let messUpWords =  function () {
  * Hide the mouse pointer and disable all pointer events.
  */
 let noMousePointer = function(){
-    let allElements = document.querySelectorAll("*");
+    let allElements = document.querySelectorAll("*"); //get all elements
 
     allElements.forEach((element)=>{
         element.style.cursor ="none";
@@ -135,9 +139,9 @@ Barriers['noMousePointer'] = noMousePointer;
  */
 document.querySelector('html').addEventListener("drop", function( event ) {
     event.preventDefault();  //prevent default action.
-    let data = event.dataTransfer.getData("text"); //get the @ID of the dragged element.
-    console.log(' data event : '+ data);
-    Barriers[data]();
+    let barrier = event.dataTransfer.getData("text"); //get the @ID of the dragged element.
+    console.log(' data event : '+ barrier);
+    Barriers[barrier](); //simulate the barrier.
 }, false);
 
 
