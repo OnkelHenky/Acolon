@@ -6,7 +6,7 @@ let Barriers = {};
 
 /**
  * Mess uo words on the target web page to show reading barriers.
- * credit to 'geon'
+ * Based on the work of Victor 'geon' Widell
  * https://github.com/geon/geon.github.com/blob/master/_posts/2016-03-03-dsxyliea.md
  */
 let messUpWords =  function () {
@@ -112,10 +112,34 @@ let messUpWords =  function () {
 };
 
 /**
+ * Hide the mouse pointer and disable all pointer events.
+ */
+let noMousePointer = function(){
+    let allElements = document.querySelectorAll("*");
+
+    allElements.forEach((element)=>{
+        element.style.cursor ="none";
+        element.style.pointerEvents = "none";
+    });
+};
+
+/**
  * A dictionary of all available barriers.
  * @type {messUpWords}
  */
 Barriers['messUPWords'] = messUpWords;
+Barriers['noMousePointer'] = noMousePointer;
+
+/**
+ * Event handler for "drop-events"
+ */
+document.querySelector('html').addEventListener("drop", function( event ) {
+    event.preventDefault();  //prevent default action.
+    let data = event.dataTransfer.getData("text"); //get the @ID of the dragged element.
+    console.log(' data event : '+ data);
+    Barriers[data]();
+}, false);
+
 
 /* events fired on the drop targets */
 document.querySelector('html').addEventListener("dragover", function( event ) {
@@ -124,28 +148,17 @@ document.querySelector('html').addEventListener("dragover", function( event ) {
 }, false);
 
 document.querySelector('html').addEventListener("dragenter", function( event ) {
-        // highlight potential drop target when the draggable element enters it
-        // if ( event.target.className == "dropzone" ) {
-        //   event.target.style.border = "6px dashed red";
-        // event.target.style.opacity = "1.0";
-        //}
+    // highlight potential drop target when the draggable element enters it
+    // if ( event.target.className == "dropzone" ) {
+    //   event.target.style.border = "6px dashed red";
+    // event.target.style.opacity = "1.0";
+    //}
 }, false);
 
 document.querySelector('html').addEventListener("dragleave", function( event ) {
     // highlight potential drop target when the draggable element enters it
     // if ( event.target.className == "dropzone" ) {
-   // event.target.style.background = "green";
+    // event.target.style.background = "green";
     //event.target.style.opacity = "0.5";
     //}
-}, false);
-
-
-/**
- * Event handler for "drop-events"
- */
-document.querySelector('html').addEventListener("drop", function( event ) {
-    event.preventDefault();  //prevent default action.
-    let data = event.dataTransfer.getData("text");
-    console.log(' data event : ', data);
-    Barriers[data]();
 }, false);
