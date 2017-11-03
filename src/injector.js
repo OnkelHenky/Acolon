@@ -4,6 +4,11 @@
 
 let Barriers = {};
 
+/**
+ * Mess uo words on the target web page to show reading barriers.
+ * credit to 'geon'
+ * https://github.com/geon/geon.github.com/blob/master/_posts/2016-03-03-dsxyliea.md
+ */
 let messUpWords =  function () {
 
     let textNodes = getTextNodesIn(document.querySelector("html"));
