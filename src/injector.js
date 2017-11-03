@@ -11,12 +11,12 @@ let messUpWords =  function () {
 
     /**
      * Get the the HTML nodes containing a text node as child.
-     * @param parent the starting node.
+     * @param root_node the starting node.
      * @returns {Array} All the nodes containing a text node as child.
      */
-    function getTextNodesIn(parent) {
+    function getTextNodesIn(root_node) {
         let nodes_with_text = [];
-        for (parent = parent.firstChild; parent; parent = parent.nextSibling) {
+        for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
             if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) { //exclude script and style elements
                 continue;
             }
@@ -135,14 +135,12 @@ document.querySelector('html').addEventListener("dragleave", function( event ) {
 }, false);
 
 
-
+/**
+ * Event handler for "drop-events"
+ */
 document.querySelector('html').addEventListener("drop", function( event ) {
-    // prevent default action (open as link for some elements)
-    event.preventDefault();
-    console.dir(event);
-    event.preventDefault();
+    event.preventDefault();  //prevent default action.
     let data = event.dataTransfer.getData("text");
-    console.dir(event);
-    console.log(' data event = ' + data);
+    console.log(' data event : ', data);
     Barriers[data]();
 }, false);
