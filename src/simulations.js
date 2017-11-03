@@ -155,8 +155,9 @@ document.querySelector('html').addEventListener("dragenter", function( event ) {
     // highlight potential drop target when the draggable element enters it
     // if ( event.target.className == "dropzone" ) {
     //   event.target.style.border = "6px dashed red";
-    // event.target.style.opacity = "1.0";
+    //   event.target.style.opacity = "1.0";
     //}
+
 }, false);
 
 document.querySelector('html').addEventListener("dragleave", function( event ) {
@@ -165,4 +166,5 @@ document.querySelector('html').addEventListener("dragleave", function( event ) {
     // event.target.style.background = "green";
     //event.target.style.opacity = "0.5";
     //}
+
 }, false);
