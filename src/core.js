@@ -4,9 +4,10 @@
  * found in the LICENSE file.
  */
 
-
+/**
+ * Adding all the event handlers for the draggable elements
+ */
 document.addEventListener('DOMContentLoaded', function() {
-    let dragged;
     /* events fired on the draggable target */
     let draggableElements = document.querySelectorAll('.draggable');
     draggableElements.forEach((element)=>{
@@ -29,14 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    /* events fired on the drop targets */
+
+    /*
     document.querySelector('#outer-dropzone').addEventListener("dragover", function( event ) {
         // prevent default to allow drop
         event.preventDefault();
     }, false);
 
-
-    /*
     document.querySelector('#outer-dropzone').addEventListener("dragenter", function( event ) {
         // highlight potential drop target when the draggable element enters it
         if ( event.target.className === "dropzone" ) {
