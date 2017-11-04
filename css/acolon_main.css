@@ -54,12 +54,18 @@ h2{
 
 .draggable{
     height: 2em;
-    background-color: #d8f11f;
-    padding-top: 0.5em;
+    background-color: #FFEE58;
+    padding-top: 1em;
     margin-top: 1em;
     padding-left: 1em;
-    font-family: Lucida Console;
-    cursor:move;
+    font-family: "Courier New";
+    cursor: move;
+    text-align: left;
+    border: solid;
+    border-width: 1px;
+    box-shadow: -2px 2px 2px 1px #9E9E9E;
+    color: #040404;
+    font-weight: bold;
 }
 
 .separator{
