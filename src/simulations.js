@@ -17,7 +17,7 @@ let messUpWords =  function () {
 
     let textNodes = getTextNodesIn(document.querySelector("html"));
     let wordsInTextNodes = [];
-
+    
     /**
      * Get the the HTML nodes containing a text node as child.
      * @param root_node the starting node.
@@ -26,7 +26,7 @@ let messUpWords =  function () {
     function getTextNodesIn(root_node) {
         let nodes_with_text = [];
         for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
-            if (['SCRIPT','STYLE'].indexOf(parent.tagName) !== 0) { //exclude script and style elements
+            if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) { //exclude script and style elements
                 continue;
             }
             if (parent.nodeType === Node.TEXT_NODE) {
