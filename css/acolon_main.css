@@ -1,11 +1,69 @@
 body{
-    width: 30em;
-    height: 30em;
-    background-color:  #F2F1EC;
+    width: auto;
+    height: auto;
+   /* background-color:  #F2F1EC; */
 }
 
 
 main{
-    margin: 1em;
+    white-space: nowrap;
 }
 
+main:after{
+    content : "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url("../resources/icon_acolon_onlyG.png");
+    background-size: cover;
+    background-repeat:   no-repeat;
+    background-position: center center;
+    width: 100%;
+    height: 100%;
+    opacity : 0.1;
+    z-index: -1;
+}
+
+/*
+ *  Header Text "Acolon Barrier Simulation"
+ */
+header{
+    border-bottom-style: double;
+    border-bottom-width: 4px;
+    border-bottom-color: #76C245;
+}
+
+header h1 {
+    font-family: "Helvetica Neue";
+    font-size: medium;
+}
+
+h2{
+    font-family: "Helvetica Neue";
+    font-size: small;
+}
+
+/* The barrier draggables */
+#draggables {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    /*background-color: antiquewhite;*/
+
+}
+
+.draggable{
+    height: 2em;
+    background-color: #d8f11f;
+    padding-top: 0.5em;
+    margin-top: 1em;
+    padding-left: 1em;
+    font-family: Lucida Console;
+    cursor:move;
+}
+
+.separator{
+    width: 100%;
+    border-top: 1px solid #ddd;
+    margin: 5px 0;
+}
