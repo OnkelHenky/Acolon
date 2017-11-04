@@ -1,54 +1,94 @@
 body{
-    width: 30em;
-    height: 30em;
-    background-color:  #F2F1EC;
+    width: auto;
+    height: auto;
+   /* background-color:  #F2F1EC; */
+}
+
+
+main{
+    white-space: nowrap;
+}
+
+main:after{
+    content : "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url("../resources/icon_acolon_onlyG.png");
+    background-size: cover;
+    background-repeat:   no-repeat;
+    background-position: center center;
+    width: 100%;
+    height: 100%;
+    opacity : 0.1;
+    z-index: -1;
+}
+
+/*
+ *  Header Text "Acolon Barrier Simulation"
+ */
+header{
+    border-bottom-style: double;
+    border-bottom-width: 4px;
+    border-bottom-color: #76C245;
+}
+
+header h1 {
+    font-family: "Helvetica Neue";
+    font-size: medium;
+}
+
+h2{
+    font-family: "Helvetica Neue";
+    font-size: small;
+}
+
+/* The barrier draggables */
+#draggables {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    /*background-color: antiquewhite;*/
 
 }
 
-#outer-dropzone {
-    height: 140px;
+.draggable{
+    height: 2em;
+    background-color: #FFEE58;
+    padding-top: 1em;
+    margin-top: 1em;
+    padding-left: 1em;
+    font-family: "Courier New";
+    cursor: move;
+    text-align: left;
+    border: solid;
+    border-width: 1px;
+    box-shadow: -2px 2px 2px 1px #9E9E9E;
+    color: #040404;
+    font-weight: bold;
+    font-size: initial;
 }
 
-#inner-dropzone {
-    height: 80px;
+.draggableISDragged {
+    height: 2em;
+    background-color: #EEEEEE;
+    padding-top: 1em;
+    margin-top: 1em;
+    padding-left: 1em;
+    font-family: "Courier New";
+    cursor: move;
+    text-align: left;
+    border: #9E9E9E;
+    border-width: 1px;
+    /* box-shadow: -2px 2px 2px 1px #9E9E9E; */
+    color: #9E9E9E;
+    font-weight: bold;
+    font-size: initial;
+    border-style: dashed;
 }
 
-.dropzone {
-    background-color: #ccc;
-    border: dashed 4px transparent;
-    border-radius: 4px;
-    margin: 10px auto 30px;
-    padding: 10px;
-    width: 80%;
-    transition: background-color 0.3s;
-}
-
-.drop-active {
-    border-color: #aaa;
-}
-
-.drop-target {
-    background-color: #29e;
-    border-color: #fff;
-    border-style: solid;
-}
-
-.drag-drop {
-    display: inline-block;
-    min-width: 40px;
-    padding: 2em 0.5em;
-
-    color: #fff;
-    background-color: #29e;
-    border: solid 2px #fff;
-
-    -webkit-transform: translate(0px, 0px);
-    transform: translate(0px, 0px);
-
-    transition: background-color 0.3s;
-}
-
-.drag-drop.can-drop {
-    color: #000;
-    background-color: #4e4;
+.separator{
+    width: 100%;
+    border-top: 1px solid #ddd;
+    margin: 5px 0;
 }
