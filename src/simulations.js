@@ -17,7 +17,7 @@ let messUpWords =  function () {
 
     let textNodes = getTextNodesIn(document.querySelector("html"));
     let wordsInTextNodes = [];
-    
+
     /**
      * Get the the HTML nodes containing a text node as child.
      * @param root_node the starting node.
@@ -112,7 +112,7 @@ let messUpWords =  function () {
      * Set the time interval for mess up words.
      * The speed.
      */
-    setInterval(messUpWords, 75);
+    setInterval(messUpWords, 50);
 };
 
 /**
