@@ -115,6 +115,40 @@ let messUpWords =  function () {
     setInterval(messUpWords, 50);
 };
 
+let notPerceivable = function () {
+
+    /*
+     * Make Header less or not perceivable for sighted users.
+     */
+    let allHeaders = document.querySelectorAll("h1, h2, h3, h4, h5, h6"); //get all header elements
+
+    allHeaders.forEach((header)=>{
+        header.style.cssText = "color: inherit; font-weight: normal; font-size: inherit; margin: 0; padding: 0; border: none";
+        if(header.hasChildNodes()){
+            let allChildes= header.querySelectorAll("*");
+            allChildes.forEach((childElement)=>{
+                childElement.style.cssText = "font-weight: normal; color: inherit; font-size: inherit; margin: 0; padding: 0; border: none";
+            })
+        }
+    });
+
+    /*
+     * Make LINKS less or not perceivable for sighted users.
+     */
+    let allLinks = document.querySelectorAll("a"); //get all links "a elements"
+
+    allLinks.forEach((link)=>{
+        link.style.cssText = "cursor: default; text-decoration: none; color: inherit; font-weight: normal; font-size: inherit;";
+        if(link.hasChildNodes()){
+            let allChildes= link.querySelectorAll("*");
+            allChildes.forEach((childElement)=>{
+                childElement.style.cssText = "text-decoration: none; font-weight: normal; color: inherit; font-size: inherit;";
+            })
+        }
+    });
+
+};
+
 /**
  * Hide the mouse pointer and disable all pointer events.
  */
@@ -133,6 +167,7 @@ let noMousePointer = function(){
  */
 Barriers['messUPWords'] = messUpWords;
 Barriers['noMousePointer'] = noMousePointer;
+Barriers['notPerceivable'] = notPerceivable;
 
 /**
  * Event handler for "drop-events"
