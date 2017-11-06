@@ -115,6 +115,9 @@ let messUpWords =  function () {
     setInterval(messUpWords, 50);
 };
 
+/**
+ *
+ */
 let notPerceivable = function () {
 
     /*
@@ -146,6 +149,36 @@ let notPerceivable = function () {
             })
         }
     });
+
+    function theWorstContrast() {
+        let textNodes = getTextNodesIn(document.querySelector("body"));
+
+        function getTextNodesIn(root_node) {
+            let nodes_with_text = [];
+            for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
+                if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) { //exclude script and style elements
+                    continue;
+                }
+                if (parent.nodeType === Node.TEXT_NODE) {
+                    nodes_with_text.push(parent)
+                }
+                else{
+                    nodes_with_text = nodes_with_text.concat(getTextNodesIn(parent))
+                }
+            }
+            return nodes_with_text;
+        }
+
+      //  console.log('textNodes',textNodes);
+
+        textNodes.forEach((element)=>{
+            console.log('element',element);
+            element.parentElement.style.cssText += "background-color: red; color: #6666ff !important";
+        });
+    }
+    document.querySelector("body").style.cssText += "background: red !important; color: #6666ff !important";
+
+   theWorstContrast();
 
 };
 
