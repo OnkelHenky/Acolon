@@ -93,3 +93,23 @@ h2{
     border-top: 1px solid #ddd;
     margin: 5px 0;
 }
+
+.progressIndicator{
+    width: 20em;
+    /* height: 5em; */
+    background-color: red;
+    color: rgb(255, 251, 251);
+    top: 0;
+    /* visibility: hidden; */
+    position: absolute;
+    font-size: large;
+    border: solid;
+    border-color: black;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 1em;
+    margin-top: 1em;
+    /* align-self: flex-start; */
+    margin-left: 4%;
+    font-weight: bold;
+}

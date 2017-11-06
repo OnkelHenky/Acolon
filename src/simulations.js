@@ -8,6 +8,19 @@
  */
 let Barriers = {};
 
+
+var node = document.createElement("div");                 // Create a <li> node
+var textnode = document.createTextNode("Applying Barrier ... ");         // Create a text node
+node.appendChild(textnode);
+node.setAttribute("id", "ACOLON_progressIndicator");// Append the text to <li>
+//node.className = "progressIndicator";
+
+//node.style.visibility = "visible";
+document.querySelector("body").appendChild(node);
+
+//document.getElementById("myList").appendChild(node);     // Append <li> to <ul> with
+
+
 /**
  * Helper function to covert RGB and RGBA values into HEX representations.
  * Credit for this nice and short RegEx transformation to 'Mottie' - https://jsfiddle.net/user/Mottie/fiddles/
@@ -28,7 +41,7 @@ function convertRGBtoHEX(color){
  * Based on the work and with permission of Victor 'geon' Widell
  * https://github.com/geon/geon.github.com/blob/master/_posts/2016-03-03-dsxyliea.md
  */
-let messUpWords =  function () {
+let messUpWords =  function (cb) {
 
     let textNodes = getTextNodesIn(document.querySelector("html"));
     let wordsInTextNodes = [];
@@ -128,13 +141,13 @@ let messUpWords =  function () {
      * The speed.
      */
     setInterval(messUpWords, 50);
+    cb()
 };
 
 /**
  * Functions
  */
-let notPerceivable = function () {
-
+let notPerceivable = function (cb) {
     /*
      * Make Header less or not perceivable for sighted users.
      */
@@ -219,6 +232,7 @@ let notPerceivable = function () {
     }
 
     reduceContrast();
+    cb();
     function theWorstContrast() {
         let textNodes = getTextNodesIn(document.querySelector("body"));
 
@@ -252,13 +266,14 @@ let notPerceivable = function () {
 /**
  * Hide the mouse pointer and disable all pointer events.
  */
-let noMousePointer = function(){
+let noMousePointer = function(cb){
     let allElements = document.querySelectorAll("*"); //get all elements
 
     allElements.forEach((element)=>{
         element.style.cursor ="none";
         element.style.pointerEvents = "none";
     });
+    cb();
 };
 
 /**
@@ -273,10 +288,46 @@ Barriers['notPerceivable'] = notPerceivable;
  * Event handler for "drop-events"
  */
 document.querySelector('html').addEventListener("drop", function( event ) {
+
     event.preventDefault();  //prevent default action.
+
     let barrier = event.dataTransfer.getData("text"); //get the @ID of the dragged element.
     console.log(' data event : '+ barrier);
-    Barriers[barrier](); //simulate the barrier.
+
+
+
+
+
+        document.querySelector("#ACOLON_progressIndicator").style.cssText = "width: 20em;\n" +
+            "    /* height: 5em; */\n" +
+            "    background-color: red;\n" +
+            "    color: rgb(255, 251, 251);\n" +
+            "    top: 0;\n" +
+            "    position: absolute;\n" +
+            "    font-size: large;\n" +
+            "    border: solid;\n" +
+            "    border-color: black;\n" +
+            "    padding-top: 1em;\n" +
+            "    padding-bottom: 1em;\n" +
+            "    padding-left: 1em;\n" +
+            "    margin-top: 1em;\n" +
+            "    visibility: visible;\n"+
+            "    margin-left: 4%;\n" +
+            "    font-weight: bold;";
+
+
+
+
+    var cb = function(){
+        //document.querySelector("body").removeChild(node);
+        document.querySelector("#ACOLON_progressIndicator").style.cssText = "visibility: hidden;";
+    };
+
+setTimeout(function() {
+    Barriers[barrier](()=>{
+        cb();
+    });
+}, 100);
 }, false);
 
 
