@@ -11,7 +11,7 @@ let Barriers = {};
 let node = document.createElement("div");
 let textnode = document.createTextNode("Applying Barrier ... ");
 node.appendChild(textnode);
-node.setAttribute("id", "ACOLON_progressIndicator");
+node.setAttribute("id", "ACOLON_progressIndicator_xdcvsfhisofjisohfshfs135127323jbjshjskhfasfhklsf");
 node.style.cssText = "width: 20em;\n" +
     "    /* height: 5em; */\n" +
     "    background-color: red;\n" +
@@ -28,10 +28,7 @@ node.style.cssText = "width: 20em;\n" +
     "    visibility: hidden;\n"+
     "    margin-left: 4%;\n" +
     "    font-weight: bold;";
-
 document.querySelector("body").appendChild(node);
-
-
 
 /**
  * Helper function to covert RGB and RGBA values into HEX representations.
@@ -47,6 +44,19 @@ function convertRGBtoHEX(color){
         ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
         ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
 }
+
+
+function test (color){
+    console.log('color: '+color);
+
+    var R = parseInt( color.substr(0,2), 16 ).toString();
+    var G = parseInt( color.substr(2,2), 16 ).toString();
+    var B = parseInt( color.substr(4,2), 16 ).toString();
+    console.log('R:' + R);
+    console.log('G:' + G);
+    console.log('B:' + B);
+}
+
 
 /**
  * Mess uo words on the target web page to show reading barriers.
@@ -191,6 +201,24 @@ let notPerceivable = function (cb) {
     });
 
 
+    /*
+     * Make input fields less perceivable
+     */
+
+    let allInputFields = document.querySelectorAll("input, label"); //get all links "a elements"
+    allInputFields.forEach((element)=>{
+        console.log('element : ', element.tagName);
+
+        if(element.tagName === 'INPUT'){
+            element.setAttribute("placeholder", "");
+            element.setAttribute("value", "");
+        }else {
+            element.style.cssText += "visibility: hidden;";
+        }
+
+    });
+
+
     function colorLuminance(hex, lum) {
 
         // validate hex string
@@ -209,6 +237,33 @@ let notPerceivable = function (cb) {
         }
 
         return rgb;
+    }
+
+    /**
+     * Get the relative luminance of the given color (in HEX representation)
+     * See: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+     *
+     *   [...] the relative luminance of a color is defined as L = 0.2126 * R + 0.7152 * G + 0.0722 * B where R, G and B are defined as:
+     *
+     *   if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
+     *   if GsRGB <= 0.03928 then G = GsRGB/12.92 else G = ((GsRGB+0.055)/1.055) ^ 2.4
+     *   if BsRGB <= 0.03928 then B = BsRGB/12.92 else B = ((BsRGB+0.055)/1.055) ^ 2.4
+     *   and RsRGB, GsRGB, and BsRGB are defined as:
+     *
+     *   RsRGB = R8bit/255
+     *   GsRGB = G8bit/255
+     *   BsRGB = B8bit/255
+     *
+     *   [...]
+     *
+     * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
+     * @param color a HEX string
+     */
+    function getLuminance(color){
+        var R = color.substring(0,2);
+        var G = color.substring(2,4);
+        var B = color.substring(4,6);
+        console.log('COLOR: ' + color + ' - R:' +R+' G:' +G+' B:'+B);
     }
 
     function reduceContrast(){
@@ -231,13 +286,15 @@ let notPerceivable = function (cb) {
         }
 
         textNodes.forEach((element)=>{
-            console.log('element',element);
+         //   console.log('element',element);
             let backColor = getComputedStyle(element.parentElement, null).getPropertyValue("background-color");
             let fontColor = getComputedStyle(element.parentElement, null).getPropertyValue("color");
-            console.dir(backColor);
-            console.log('backColor : ', convertRGBtoHEX(backColor));
-            console.dir(fontColor);
-            console.log('fontColor : ', convertRGBtoHEX(fontColor));
+            console.log(fontColor);
+            console.log(test(convertRGBtoHEX(fontColor)));
+           // console.dir(backColor);
+           // console.log('backColor : ', convertRGBtoHEX(backColor));
+           // console.dir(fontColor);
+           // console.log('fontColor : ', convertRGBtoHEX(fontColor));
             //   element.parentElement.style.cssText += "background-color: red; color: #6666ff !important";
         });
 
