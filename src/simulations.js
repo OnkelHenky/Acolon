@@ -8,17 +8,29 @@
  */
 let Barriers = {};
 
-
-var node = document.createElement("div");                 // Create a <li> node
-var textnode = document.createTextNode("Applying Barrier ... ");         // Create a text node
+let node = document.createElement("div");
+let textnode = document.createTextNode("Applying Barrier ... ");
 node.appendChild(textnode);
-node.setAttribute("id", "ACOLON_progressIndicator");// Append the text to <li>
-//node.className = "progressIndicator";
+node.setAttribute("id", "ACOLON_progressIndicator");
+node.style.cssText = "width: 20em;\n" +
+    "    /* height: 5em; */\n" +
+    "    background-color: red;\n" +
+    "    color: rgb(255, 251, 251);\n" +
+    "    top: 0;\n" +
+    "    position: absolute;\n" +
+    "    font-size: large;\n" +
+    "    border: solid;\n" +
+    "    border-color: black;\n" +
+    "    padding-top: 1em;\n" +
+    "    padding-bottom: 1em;\n" +
+    "    padding-left: 1em;\n" +
+    "    margin-top: 1em;\n" +
+    "    visibility: hidden;\n"+
+    "    margin-left: 4%;\n" +
+    "    font-weight: bold;";
 
-//node.style.visibility = "visible";
 document.querySelector("body").appendChild(node);
 
-//document.getElementById("myList").appendChild(node);     // Append <li> to <ul> with
 
 
 /**
@@ -288,46 +300,18 @@ Barriers['notPerceivable'] = notPerceivable;
  * Event handler for "drop-events"
  */
 document.querySelector('html').addEventListener("drop", function( event ) {
-
     event.preventDefault();  //prevent default action.
-
     let barrier = event.dataTransfer.getData("text"); //get the @ID of the dragged element.
     console.log(' data event : '+ barrier);
-
-
-
-
-
-        document.querySelector("#ACOLON_progressIndicator").style.cssText = "width: 20em;\n" +
-            "    /* height: 5em; */\n" +
-            "    background-color: red;\n" +
-            "    color: rgb(255, 251, 251);\n" +
-            "    top: 0;\n" +
-            "    position: absolute;\n" +
-            "    font-size: large;\n" +
-            "    border: solid;\n" +
-            "    border-color: black;\n" +
-            "    padding-top: 1em;\n" +
-            "    padding-bottom: 1em;\n" +
-            "    padding-left: 1em;\n" +
-            "    margin-top: 1em;\n" +
-            "    visibility: visible;\n"+
-            "    margin-left: 4%;\n" +
-            "    font-weight: bold;";
-
-
-
-
-    var cb = function(){
-        //document.querySelector("body").removeChild(node);
-        document.querySelector("#ACOLON_progressIndicator").style.cssText = "visibility: hidden;";
+    node.style.cssText += "visibility: visible;";
+    let cb = function(){
+        node.style.cssText += "visibility: hidden;";
     };
-
-setTimeout(function() {
-    Barriers[barrier](()=>{
-        cb();
-    });
-}, 100);
+    setTimeout(function() {
+        Barriers[barrier](()=>{
+            cb();
+        });
+    }, 100);
 }, false);
 
 
