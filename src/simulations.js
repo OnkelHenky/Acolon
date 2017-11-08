@@ -46,15 +46,36 @@ function convertRGBtoHEX(color){
 }
 
 
-function test (color){
-    console.log('color: '+color);
-
-    var R = parseInt( color.substr(0,2), 16 ).toString();
-    var G = parseInt( color.substr(2,2), 16 ).toString();
-    var B = parseInt( color.substr(4,2), 16 ).toString();
-    console.log('R:' + R);
-    console.log('G:' + G);
-    console.log('B:' + B);
+/**
+ * Get the relative luminance of the given color (in HEX representation)
+ * See W3C: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+ *
+ *   [...] the relative luminance of a color is defined as:
+ *
+ *   L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+ *
+ *   Where R, G and B are defined as:
+ *
+ *   if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
+ *   if GsRGB <= 0.03928 then G = GsRGB/12.92 else G = ((GsRGB+0.055)/1.055) ^ 2.4
+ *   if BsRGB <= 0.03928 then B = BsRGB/12.92 else B = ((BsRGB+0.055)/1.055) ^ 2.4
+ *
+ *   and RsRGB, GsRGB, and BsRGB are defined as:
+ *
+ *   RsRGB = R8bit/255
+ *   GsRGB = G8bit/255
+ *   BsRGB = B8bit/255
+ *
+ *   [...]
+ *
+ * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
+ * @param color a HEX string
+ */
+function getLuminance(color){
+    let RsRGB = color.substring(0,2)/255;
+    let GsRGB = color.substring(2,4)/255;
+    let BsRGB = color.substring(4,6)/255;
+    console.log('COLOR: ' + color + ' - R:' +RsRGB+' G:' +GsRGB+' B:'+BsRGB);
 }
 
 
@@ -239,32 +260,7 @@ let notPerceivable = function (cb) {
         return rgb;
     }
 
-    /**
-     * Get the relative luminance of the given color (in HEX representation)
-     * See: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
-     *
-     *   [...] the relative luminance of a color is defined as L = 0.2126 * R + 0.7152 * G + 0.0722 * B where R, G and B are defined as:
-     *
-     *   if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
-     *   if GsRGB <= 0.03928 then G = GsRGB/12.92 else G = ((GsRGB+0.055)/1.055) ^ 2.4
-     *   if BsRGB <= 0.03928 then B = BsRGB/12.92 else B = ((BsRGB+0.055)/1.055) ^ 2.4
-     *   and RsRGB, GsRGB, and BsRGB are defined as:
-     *
-     *   RsRGB = R8bit/255
-     *   GsRGB = G8bit/255
-     *   BsRGB = B8bit/255
-     *
-     *   [...]
-     *
-     * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
-     * @param color a HEX string
-     */
-    function getLuminance(color){
-        var R = color.substring(0,2);
-        var G = color.substring(2,4);
-        var B = color.substring(4,6);
-        console.log('COLOR: ' + color + ' - R:' +R+' G:' +G+' B:'+B);
-    }
+
 
     function reduceContrast(){
         let textNodes = getTextNodesIn(document.querySelector("body"));
@@ -290,7 +286,7 @@ let notPerceivable = function (cb) {
             let backColor = getComputedStyle(element.parentElement, null).getPropertyValue("background-color");
             let fontColor = getComputedStyle(element.parentElement, null).getPropertyValue("color");
             console.log(fontColor);
-            console.log(test(convertRGBtoHEX(fontColor)));
+            console.log(getLuminance(convertRGBtoHEX(fontColor)));
            // console.dir(backColor);
            // console.log('backColor : ', convertRGBtoHEX(backColor));
            // console.dir(fontColor);
