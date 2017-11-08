@@ -50,7 +50,7 @@ function convertRGBtoHEX(color){
  * Get the relative luminance of the given color (in HEX representation)
  * See W3C: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
  *
- *   [...] the relative luminance of a color is defined as:
+ *   [...] the relative luminance (L) of a color is defined as:
  *
  *   L = 0.2126 * R + 0.7152 * G + 0.0722 * B
  *
@@ -67,15 +67,33 @@ function convertRGBtoHEX(color){
  *   BsRGB = B8bit/255
  *
  *   [...]
- *
- * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
- * @param color a HEX string
+ * @param  colorHEX a HEX string
+ * @return number the relative luminance of the given color
  */
-function getLuminance(color){
-    let RsRGB = color.substring(0,2)/255;
-    let GsRGB = color.substring(2,4)/255;
-    let BsRGB = color.substring(4,6)/255;
-    console.log('COLOR: ' + color + ' - R:' +RsRGB+' G:' +GsRGB+' B:'+BsRGB);
+function getLuminance(colorHEX){
+    /*
+     * First: Get sRGB values for each color form the given HEX string.
+     */
+    let RsRGB = parseInt(colorHEX.substr(0,2), 16)/255;
+    let GsRGB = parseInt(colorHEX.substr(2,2), 16)/255;
+    let BsRGB = parseInt(colorHEX.substr(4,2), 16)/255;
+
+    let R = ( RsRGB <= 0.03928 ) ? RsRGB/12.92 : Math.pow(((RsRGB+0.055)/1.055), 2.4);
+    let G = ( GsRGB <= 0.03928 ) ? GsRGB/12.92 : Math.pow(((GsRGB+0.055)/1.055), 2.4);
+    let B = ( BsRGB <= 0.03928 ) ? BsRGB/12.92 : Math.pow(((BsRGB+0.055)/1.055), 2.4);
+
+    // Return the relative luminance of the color.
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+}
+
+/**
+ * Calculate the contrast between the two given colors
+ * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
+ * @param color1
+ * @param color2
+ */
+function contrastBetween(color1, color2){
+
 }
 
 
@@ -285,7 +303,6 @@ let notPerceivable = function (cb) {
          //   console.log('element',element);
             let backColor = getComputedStyle(element.parentElement, null).getPropertyValue("background-color");
             let fontColor = getComputedStyle(element.parentElement, null).getPropertyValue("color");
-            console.log(fontColor);
             console.log(getLuminance(convertRGBtoHEX(fontColor)));
            // console.dir(backColor);
            // console.log('backColor : ', convertRGBtoHEX(backColor));
