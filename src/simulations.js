@@ -313,9 +313,11 @@ let notPerceivable = function (cb) {
                 console.log('FColor: '+BColor);
                 console.log('newFColor: '+newFColor);
                 element.parentElement.style.cssText += 'background-color: #f1f1f1'; // + newFColor + ';';
+              //  let newFColor2 = colorLuminance("#f0ffff",0.1);
+                element.parentElement.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
             }else{
-               // let newFColor = colorLuminance(FColor,0.6);
-             element.parentElement.style.cssText += 'color: #000000;'; //' + newFColor + ';';
+              //  let newFColor = colorLuminance("f1f1f1",0.5);
+             element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
             }
 
 
