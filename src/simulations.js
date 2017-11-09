@@ -87,13 +87,14 @@ function getLuminance(colorHEX){
 }
 
 /**
- * Calculate the contrast between the two given colors
+ * Calculate the contrast between the two given colors.
+ * The results is rounded to two decimal points.
  * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
- * @param color1
- * @param color2
+ * @param colorHEX1 a HEX string
+ * @param colorHEX2 a HEX string
  */
-function contrastBetween(color1, color2){
-
+function getContrastRatioBetween(colorHEX1, colorHEX2){
+    return ((getLuminance(colorHEX1) + 0.05) / (getLuminance(colorHEX2) + 0.05)).toFixed(2);
 }
 
 
@@ -215,7 +216,7 @@ let notPerceivable = function (cb) {
     let allHeaders = document.querySelectorAll("h1, h2, h3, h4, h5, h6"); //get all header elements
 
     allHeaders.forEach((header)=>{
-        header.style.cssText = "color: inherit; font-weight: normal; font-size: inherit; margin: 0; padding: 0; border: none";
+        header.style.cssText = "color: #000000; font-weight: normal; font-size: inherit; margin: 0; padding: 0; border: none";
         if(header.hasChildNodes()){
             let allChildes= header.querySelectorAll("*");
             allChildes.forEach((childElement)=>{
@@ -225,7 +226,7 @@ let notPerceivable = function (cb) {
     });
 
     /*
-     * Make LINKS less or not perceivable for sighted users.
+     * Make LINKS less or not perceivable for sighted users. ddd
      */
     let allLinks = document.querySelectorAll("a"); //get all links "a elements"
 
@@ -234,16 +235,14 @@ let notPerceivable = function (cb) {
         if(link.hasChildNodes()){
             let allChildes= link.querySelectorAll("*");
             allChildes.forEach((childElement)=>{
-                childElement.style.cssText += "text-decoration: none; font-weight: normal; font-size: inherit;";
+                childElement.style.cssText += "text-decoration: none; color: inherit; font-weight: normal; font-size: inherit;";
             })
         }
     });
 
-
     /*
      * Make input fields less perceivable
      */
-
     let allInputFields = document.querySelectorAll("input, label"); //get all links "a elements"
     allInputFields.forEach((element)=>{
         console.log('element : ', element.tagName);
@@ -303,7 +302,23 @@ let notPerceivable = function (cb) {
          //   console.log('element',element);
             let backColor = getComputedStyle(element.parentElement, null).getPropertyValue("background-color");
             let fontColor = getComputedStyle(element.parentElement, null).getPropertyValue("color");
-            console.log(getLuminance(convertRGBtoHEX(fontColor)));
+            let BColor = convertRGBtoHEX(backColor);
+            let FColor = convertRGBtoHEX(fontColor);
+
+
+            //console.log('CR: '+ getContrastRatioBetween(convertRGBtoHEX(fontColor), convertRGBtoHEX(backColor)));
+            console.log('BColor L = '+getLuminance(BColor));
+            if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
+                let newFColor = colorLuminance(FColor,-0.8);
+                console.log('FColor: '+BColor);
+                console.log('newFColor: '+newFColor);
+                element.parentElement.style.cssText += 'background-color: #f1f1f1'; // + newFColor + ';';
+            }else{
+               // let newFColor = colorLuminance(FColor,0.6);
+             element.parentElement.style.cssText += 'color: #000000;'; //' + newFColor + ';';
+            }
+
+
            // console.dir(backColor);
            // console.log('backColor : ', convertRGBtoHEX(backColor));
            // console.dir(fontColor);
