@@ -11,7 +11,7 @@ let Barriers = {};
 let node = document.createElement("div");
 let textnode = document.createTextNode("Applying Barrier ... ");
 node.appendChild(textnode);
-node.setAttribute("id", "ACOLON_progressIndicator");
+node.setAttribute("id", "ACOLON_progressIndicator_xdcvsfhisofjisohfshfs135127323jbjshjskhfasfhklsf");
 node.style.cssText = "width: 20em;\n" +
     "    /* height: 5em; */\n" +
     "    background-color: red;\n" +
@@ -28,10 +28,7 @@ node.style.cssText = "width: 20em;\n" +
     "    visibility: hidden;\n"+
     "    margin-left: 4%;\n" +
     "    font-weight: bold;";
-
 document.querySelector("body").appendChild(node);
-
-
 
 /**
  * Helper function to covert RGB and RGBA values into HEX representations.
@@ -47,6 +44,59 @@ function convertRGBtoHEX(color){
         ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
         ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
 }
+
+
+/**
+ * Get the relative luminance of the given color (in HEX representation)
+ * See W3C: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
+ *
+ *   [...] the relative luminance (L) of a color is defined as:
+ *
+ *   L = 0.2126 * R + 0.7152 * G + 0.0722 * B
+ *
+ *   Where R, G and B are defined as:
+ *
+ *   if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
+ *   if GsRGB <= 0.03928 then G = GsRGB/12.92 else G = ((GsRGB+0.055)/1.055) ^ 2.4
+ *   if BsRGB <= 0.03928 then B = BsRGB/12.92 else B = ((BsRGB+0.055)/1.055) ^ 2.4
+ *
+ *   and RsRGB, GsRGB, and BsRGB are defined as:
+ *
+ *   RsRGB = R8bit/255
+ *   GsRGB = G8bit/255
+ *   BsRGB = B8bit/255
+ *
+ *   [...]
+ * @param  colorHEX a HEX string
+ * @return number the relative luminance of the given color
+ */
+function getLuminance(colorHEX){
+    /*
+     * First: Get sRGB values for each color form the given HEX string.
+     */
+    let RsRGB = parseInt(colorHEX.substr(0,2), 16)/255;
+    let GsRGB = parseInt(colorHEX.substr(2,2), 16)/255;
+    let BsRGB = parseInt(colorHEX.substr(4,2), 16)/255;
+
+    let R = ( RsRGB <= 0.03928 ) ? RsRGB/12.92 : Math.pow(((RsRGB+0.055)/1.055), 2.4);
+    let G = ( GsRGB <= 0.03928 ) ? GsRGB/12.92 : Math.pow(((GsRGB+0.055)/1.055), 2.4);
+    let B = ( BsRGB <= 0.03928 ) ? BsRGB/12.92 : Math.pow(((BsRGB+0.055)/1.055), 2.4);
+
+    // Return the relative luminance of the color.
+    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+}
+
+/**
+ * Calculate the contrast between the two given colors.
+ * The results is rounded to two decimal points.
+ * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
+ * @param colorHEX1 a HEX string
+ * @param colorHEX2 a HEX string
+ */
+function getContrastRatioBetween(colorHEX1, colorHEX2){
+    return ((getLuminance(colorHEX1) + 0.05) / (getLuminance(colorHEX2) + 0.05)).toFixed(2);
+}
+
 
 /**
  * Mess uo words on the target web page to show reading barriers.
@@ -166,7 +216,7 @@ let notPerceivable = function (cb) {
     let allHeaders = document.querySelectorAll("h1, h2, h3, h4, h5, h6"); //get all header elements
 
     allHeaders.forEach((header)=>{
-        header.style.cssText = "color: inherit; font-weight: normal; font-size: inherit; margin: 0; padding: 0; border: none";
+        header.style.cssText = "color: #000000; font-weight: normal; font-size: inherit; margin: 0; padding: 0; border: none";
         if(header.hasChildNodes()){
             let allChildes= header.querySelectorAll("*");
             allChildes.forEach((childElement)=>{
@@ -176,7 +226,7 @@ let notPerceivable = function (cb) {
     });
 
     /*
-     * Make LINKS less or not perceivable for sighted users.
+     * Make LINKS less or not perceivable for sighted users. ddd
      */
     let allLinks = document.querySelectorAll("a"); //get all links "a elements"
 
@@ -185,9 +235,25 @@ let notPerceivable = function (cb) {
         if(link.hasChildNodes()){
             let allChildes= link.querySelectorAll("*");
             allChildes.forEach((childElement)=>{
-                childElement.style.cssText += "text-decoration: none; font-weight: normal; font-size: inherit;";
+                childElement.style.cssText += "text-decoration: none; color: inherit; font-weight: normal; font-size: inherit;";
             })
         }
+    });
+
+    /*
+     * Make input fields less perceivable
+     */
+    let allInputFields = document.querySelectorAll("input, label"); //get all links "a elements"
+    allInputFields.forEach((element)=>{
+        console.log('element : ', element.tagName);
+
+        if(element.tagName === 'INPUT'){
+            element.setAttribute("placeholder", "");
+            element.setAttribute("value", "");
+        }else {
+            element.style.cssText += "visibility: hidden;";
+        }
+
     });
 
 
@@ -211,6 +277,8 @@ let notPerceivable = function (cb) {
         return rgb;
     }
 
+
+
     function reduceContrast(){
         let textNodes = getTextNodesIn(document.querySelector("body"));
 
@@ -231,48 +299,39 @@ let notPerceivable = function (cb) {
         }
 
         textNodes.forEach((element)=>{
-            console.log('element',element);
+         //   console.log('element',element);
             let backColor = getComputedStyle(element.parentElement, null).getPropertyValue("background-color");
             let fontColor = getComputedStyle(element.parentElement, null).getPropertyValue("color");
-            console.dir(backColor);
-            console.log('backColor : ', convertRGBtoHEX(backColor));
-            console.dir(fontColor);
-            console.log('fontColor : ', convertRGBtoHEX(fontColor));
-            //   element.parentElement.style.cssText += "background-color: red; color: #6666ff !important";
+            let BColor = convertRGBtoHEX(backColor);
+            let FColor = convertRGBtoHEX(fontColor);
+
+
+            //console.log('CR: '+ getContrastRatioBetween(convertRGBtoHEX(fontColor), convertRGBtoHEX(backColor)));
+       /*     console.log('BColor L = '+getLuminance(BColor) +'color =  ' +BColor);
+            if(getLuminance(BColor) < 0.5){
+                element.parentElement.style.cssText += 'color: #000000;';// + newFColor + ';';
+            }else{
+                element.parentElement.style.cssText += 'color: #ffffff;';// + newFColor + ';';
+            } */
+
+
+            if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
+                let newFColor = colorLuminance(FColor,-0.8);
+                console.log('FColor: '+BColor);
+                console.log('newFColor: '+newFColor);
+                element.parentElement.style.cssText += 'background-color: #f1f1f1'; // + newFColor + ';';
+              //  let newFColor2 = colorLuminance("#f0ffff",0.1);
+                element.parentElement.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
+            }else{
+              //  let newFColor = colorLuminance("f1f1f1",0.5);
+             element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
+            }
         });
 
     }
 
     reduceContrast();
     cb();
-    function theWorstContrast() {
-        let textNodes = getTextNodesIn(document.querySelector("body"));
-
-        function getTextNodesIn(root_node) {
-            let nodes_with_text = [];
-            for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
-                if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) { //exclude script and style elements
-                    continue;
-                }
-                if (parent.nodeType === Node.TEXT_NODE) {
-                    nodes_with_text.push(parent)
-                }
-                else{
-                    nodes_with_text = nodes_with_text.concat(getTextNodesIn(parent))
-                }
-            }
-            return nodes_with_text;
-        }
-
-      //  console.log('textNodes',textNodes);
-
-        textNodes.forEach((element)=>{
-            console.log('element',element);
-            element.parentElement.style.cssText += "background-color: red; color: #6666ff !important";
-        });
-    }
-    //document.querySelector("body").style.cssText += "background: red !important; color: #6666ff !important";
-   // theWorstContrast();
 };
 
 /**
