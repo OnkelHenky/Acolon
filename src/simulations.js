@@ -307,7 +307,14 @@ let notPerceivable = function (cb) {
 
 
             //console.log('CR: '+ getContrastRatioBetween(convertRGBtoHEX(fontColor), convertRGBtoHEX(backColor)));
-            console.log('BColor L = '+getLuminance(BColor));
+       /*     console.log('BColor L = '+getLuminance(BColor) +'color =  ' +BColor);
+            if(getLuminance(BColor) < 0.5){
+                element.parentElement.style.cssText += 'color: #000000;';// + newFColor + ';';
+            }else{
+                element.parentElement.style.cssText += 'color: #ffffff;';// + newFColor + ';';
+            } */
+
+
             if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
                 let newFColor = colorLuminance(FColor,-0.8);
                 console.log('FColor: '+BColor);
@@ -319,47 +326,12 @@ let notPerceivable = function (cb) {
               //  let newFColor = colorLuminance("f1f1f1",0.5);
              element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
             }
-
-
-           // console.dir(backColor);
-           // console.log('backColor : ', convertRGBtoHEX(backColor));
-           // console.dir(fontColor);
-           // console.log('fontColor : ', convertRGBtoHEX(fontColor));
-            //   element.parentElement.style.cssText += "background-color: red; color: #6666ff !important";
         });
 
     }
 
     reduceContrast();
     cb();
-    function theWorstContrast() {
-        let textNodes = getTextNodesIn(document.querySelector("body"));
-
-        function getTextNodesIn(root_node) {
-            let nodes_with_text = [];
-            for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
-                if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) { //exclude script and style elements
-                    continue;
-                }
-                if (parent.nodeType === Node.TEXT_NODE) {
-                    nodes_with_text.push(parent)
-                }
-                else{
-                    nodes_with_text = nodes_with_text.concat(getTextNodesIn(parent))
-                }
-            }
-            return nodes_with_text;
-        }
-
-      //  console.log('textNodes',textNodes);
-
-        textNodes.forEach((element)=>{
-            console.log('element',element);
-            element.parentElement.style.cssText += "background-color: red; color: #6666ff !important";
-        });
-    }
-    //document.querySelector("body").style.cssText += "background: red !important; color: #6666ff !important";
-   // theWorstContrast();
 };
 
 /**
