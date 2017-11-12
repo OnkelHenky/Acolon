@@ -299,31 +299,18 @@ let notPerceivable = function (cb) {
         }
 
         textNodes.forEach((element)=>{
-         //   console.log('element',element);
             let backColor = getComputedStyle(element.parentElement, null).getPropertyValue("background-color");
             let fontColor = getComputedStyle(element.parentElement, null).getPropertyValue("color");
             let BColor = convertRGBtoHEX(backColor);
             let FColor = convertRGBtoHEX(fontColor);
-
-
-            //console.log('CR: '+ getContrastRatioBetween(convertRGBtoHEX(fontColor), convertRGBtoHEX(backColor)));
-       /*     console.log('BColor L = '+getLuminance(BColor) +'color =  ' +BColor);
-            if(getLuminance(BColor) < 0.5){
-                element.parentElement.style.cssText += 'color: #000000;';// + newFColor + ';';
-            }else{
-                element.parentElement.style.cssText += 'color: #ffffff;';// + newFColor + ';';
-            } */
-
 
             if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
                 let newFColor = colorLuminance(FColor,-0.8);
                 console.log('FColor: '+BColor);
                 console.log('newFColor: '+newFColor);
                 element.parentElement.style.cssText += 'background-color: #f1f1f1'; // + newFColor + ';';
-              //  let newFColor2 = colorLuminance("#f0ffff",0.1);
                 element.parentElement.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
             }else{
-              //  let newFColor = colorLuminance("f1f1f1",0.5);
              element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
             }
         });
