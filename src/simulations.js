@@ -90,13 +90,49 @@ function getLuminance(colorHEX){
  * Calculate the contrast between the two given colors.
  * The results is rounded to two decimal points.
  * Example for contrast calculation: http://tools.cactusflower.org/analyzer/
+ * From the W3C Spec. (https://www.w3.org/TR/WCAG20-TECHS/G17#G17-procedure):
+ * Calculate the contrast ratio using the following formula.
+ * (L1 + 0.05) / (L2 + 0.05), where
+ *  L1 is the relative luminance of the lighter of the foreground or background colors, and
+ *  L2 is the relative luminance of the darker of the foreground or background colors.
+ *
  * @param colorHEX1 a HEX string
  * @param colorHEX2 a HEX string
  */
 function getContrastRatioBetween(colorHEX1, colorHEX2){
-    return ((getLuminance(colorHEX1) + 0.05) / (getLuminance(colorHEX2) + 0.05)).toFixed(2);
+    if(colorHEX1 >= colorHEX2){
+        return ((getLuminance(colorHEX1) + 0.05) / (getLuminance(colorHEX2) + 0.05)).toFixed(2);
+    }else{
+        return ((getLuminance(colorHEX2) + 0.05) / (getLuminance(colorHEX1) + 0.05)).toFixed(2);
+    }
 }
 
+/**
+ * Lighting or darken RGB colors
+ * Credit to Craig Buckler: https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+ * @param hex
+ * @param lum
+ * @return {string}
+ */
+function colorLuminance(hex, lum) {
+
+    // validate hex string
+    hex = String(hex).replace(/[^0-9a-f]/gi, '');
+    if (hex.length < 6) {
+        hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    }
+    lum = lum || 0;
+
+    // convert to decimal and change luminosity
+    let rgb = "#", c, i;
+    for (i = 0; i < 3; i++) {
+        c = parseInt(hex.substr(i*2,2), 16);
+        c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+        rgb += ("00"+c).substr(c.length);
+    }
+
+    return rgb;
+}
 
 /**
  * Mess uo words on the target web page to show reading barriers.
@@ -216,22 +252,22 @@ let notPerceivable = function (cb) {
     let allHeaders = document.querySelectorAll("h1, h2, h3, h4, h5, h6"); //get all header elements
 
     allHeaders.forEach((header)=>{
-        header.style.cssText = "color: #000000; font-weight: normal; font-size: inherit; margin: 0; padding: 0; border: none";
+        header.style.cssText += "color: inherit; font-weight: normal; font-size: inherit; margin: 0; padding: 0; border: none";
         if(header.hasChildNodes()){
             let allChildes= header.querySelectorAll("*");
             allChildes.forEach((childElement)=>{
-                childElement.style.cssText = "font-weight: normal; color: inherit; font-size: inherit; margin: 0; padding: 0; border: none";
+                childElement.style.cssText += "font-weight: normal; color: inherit; font-size: inherit; margin: 0; padding: 0; border: none";
             })
         }
     });
 
     /*
-     * Make LINKS less or not perceivable for sighted users. ddd
+     * Make LINKS less or not perceivable for sighted users.
      */
-    let allLinks = document.querySelectorAll("a"); //get all links "a elements"
+    let allLinks = document.querySelectorAll("a"); //get all links "a elements"s
 
     allLinks.forEach((link)=>{
-        link.style.cssText = "cursor: default; text-decoration: none; color: inherit; font-weight: normal; font-size: inherit;";
+        link.style.cssText += "cursor: default; text-decoration: none; color: inherit; font-weight: normal; font-size: inherit;";
         if(link.hasChildNodes()){
             let allChildes= link.querySelectorAll("*");
             allChildes.forEach((childElement)=>{
@@ -257,25 +293,32 @@ let notPerceivable = function (cb) {
     });
 
 
-    function colorLuminance(hex, lum) {
+    let textNodes = getTextNodesIn(document.querySelector("body"));
 
-        // validate hex string
-        hex = String(hex).replace(/[^0-9a-f]/gi, '');
-        if (hex.length < 6) {
-            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    function getTextNodesIn(root_node) {
+        let nodes_with_text = [];
+        for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
+            if (['SCRIPT','STYLE'].indexOf(parent.tagName) >= 0) { //exclude script and style elements
+                continue;
+            }
+            if (parent.nodeType === Node.TEXT_NODE) {
+                nodes_with_text.push(parent)
+            }
+            else{
+                nodes_with_text = nodes_with_text.concat(getTextNodesIn(parent))
+            }
         }
-        lum = lum || 0;
-
-        // convert to decimal and change luminosity
-        let rgb = "#", c, i;
-        for (i = 0; i < 3; i++) {
-            c = parseInt(hex.substr(i*2,2), 16);
-            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-            rgb += ("00"+c).substr(c.length);
-        }
-
-        return rgb;
+        return nodes_with_text;
     }
+
+    textNodes.forEach((element)=>{
+            element.parentElement.parentElement.style.cssText += "background-color: #FFFFFF; color: #000000; font-weight: normal; color: inherit;  border: none";
+
+    });
+    cb();
+};
+
+let badContrast = function (cb) {
 
 
 
@@ -304,15 +347,25 @@ let notPerceivable = function (cb) {
             let BColor = convertRGBtoHEX(backColor);
             let FColor = convertRGBtoHEX(fontColor);
 
-            if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
-                let newFColor = colorLuminance(FColor,-0.8);
-                console.log('FColor: '+BColor);
-                console.log('newFColor: '+newFColor);
-                element.parentElement.style.cssText += 'background-color: #f1f1f1'; // + newFColor + ';';
-                element.parentElement.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
-            }else{
-             element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
-            }
+            let contrastRatio = getContrastRatioBetween(BColor,FColor);
+            let test = getContrastRatioBetween('E1183A','FEFCFD');
+            console.log('contrastRatio: of R & W : ' + test);
+            if(contrastRatio < 4.5) {
+                console.log('contrastRatio: is bad with: ');
+                console.log(BColor +' ' +FColor+ ' : '+contrastRatio);
+                //if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
+                    let newFColor = colorLuminance(FColor,0.8);
+                    console.log('FColor: '+BColor);
+                    console.log('newFColor: '+newFColor);
+                    element.parentElement.style.color = newFColor;
+                   // element.parentElement.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
+               }else{
+                  //  element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
+                }
+
+          // }
+
+
         });
 
     }
@@ -341,6 +394,7 @@ let noMousePointer = function(cb){
 Barriers['messUPWords'] = messUpWords;
 Barriers['noMousePointer'] = noMousePointer;
 Barriers['notPerceivable'] = notPerceivable;
+Barriers['badContrast'] = badContrast;
 
 /**
  * Event handler for "drop-events"
