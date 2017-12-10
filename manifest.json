@@ -4,7 +4,7 @@
 
   "name": "Acolon",
   "description": "Barrier simulation for the web",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "icons": { "16": "icon_acolon.png",
              "48": "icon_acolon.png",
             "128": "icon_acolon.png"
@@ -21,6 +21,6 @@
 
   "content_scripts": [ {
     "js": ["src/simulations.js"],
-    "matches": [ "http://*/*", "https://*/*"]
+    "matches": [ "http://*/*", "https://*/*","file:///*"]
   }]
 }
