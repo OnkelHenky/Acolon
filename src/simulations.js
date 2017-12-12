@@ -100,10 +100,13 @@ function getLuminance(colorHEX){
  * @param colorHEX2 a HEX string
  */
 function getContrastRatioBetween(colorHEX1, colorHEX2){
-    if(colorHEX1 >= colorHEX2){
-        return ((getLuminance(colorHEX1) + 0.05) / (getLuminance(colorHEX2) + 0.05)).toFixed(2);
+    let L1 = getLuminance(colorHEX1);
+    let L2 = getLuminance(colorHEX2);
+
+    if(L1 >= L2){
+        return ((L1 + 0.05) / (L2 + 0.05)).toFixed(2);
     }else{
-        return ((getLuminance(colorHEX2) + 0.05) / (getLuminance(colorHEX1) + 0.05)).toFixed(2);
+        return ((L2 + 0.05) / (L1 + 0.05)).toFixed(2);
     }
 }
 
@@ -323,8 +326,10 @@ let badContrast = function (cb) {
 
 
     function reduceContrast(){
-        let textNodes = getTextNodesIn(document.querySelector("body"));
-
+       // let textNodes = getTextNodesIn(document.querySelector("body"));
+      let textNodes = document.querySelector("body *[style]");
+        console.dir(textNodes);
+/*
         function getTextNodesIn(root_node) {
             let nodes_with_text = [];
             for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
@@ -332,7 +337,12 @@ let badContrast = function (cb) {
                     continue;
                 }
                 if (parent.nodeType === Node.TEXT_NODE) {
-                    nodes_with_text.push(parent)
+                    if (parent.nodeValue.length > 0 && (parent.nodeValue.charCodeAt(0) >= 33) ){
+                        console.log('text in node value : '+parent.nodeValue);
+                        console.log('text in node chat at 0 : '+parent.nodeValue.charCodeAt(0));
+                        console.log('text in node.length : '+parent.nodeValue.length);
+                        nodes_with_text.push(parent)
+                    }
                 }
                 else{
                     nodes_with_text = nodes_with_text.concat(getTextNodesIn(parent))
@@ -342,32 +352,37 @@ let badContrast = function (cb) {
         }
 
         textNodes.forEach((element)=>{
+            console.log('-> hast BG? ' + getComputedStyle(element.parentElement, null).hasOwnProperty("background-color"));
+           // console.log('-> C '+element.parentElement.style);
+
             let backColor = getComputedStyle(element.parentElement, null).getPropertyValue("background-color");
             let fontColor = getComputedStyle(element.parentElement, null).getPropertyValue("color");
             let BColor = convertRGBtoHEX(backColor);
             let FColor = convertRGBtoHEX(fontColor);
 
             let contrastRatio = getContrastRatioBetween(BColor,FColor);
-            let test = getContrastRatioBetween('E1183A','FEFCFD');
-            console.log('contrastRatio: of R & W : ' + test);
-            if(contrastRatio < 4.5) {
+
+           // if(contrastRatio < 4.5 && contrastRatio > 1.00) {
                 console.log('contrastRatio: is bad with: ');
                 console.log(BColor +' ' +FColor+ ' : '+contrastRatio);
-                //if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
-                    let newFColor = colorLuminance(FColor,0.8);
+            //    if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
+               //     let newFColor = colorLuminance(FColor,0.5);
                     console.log('FColor: '+BColor);
-                    console.log('newFColor: '+newFColor);
-                    element.parentElement.style.color = newFColor;
-                   // element.parentElement.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
-               }else{
-                  //  element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
-                }
-
+               //     console.log('newFColor: '+newFColor);
+                    //element.parentElement.style.color = newFColor;
+                    //element.style.cssText += 'color: '+ newFColor + ';';
+                   // element.style.cssText += 'background-color: '+ newFColor + ';';
+                     element.parentElement.style.cssText += 'border-style: solid; border-color: royalblue; border-width: 0.1em;';
+                 //    element.parentElement.style.cssText += 'color: #ff971c; ';
+                     element.nodeValue +=BColor +":" +FColor+" "+contrastRatio;
+                    //element.parentElement.style.cssText += 'color: '+ newFColor + ';';
+                    //element.parentElement.style.cssText += 'background-color: '+ newFColor + ';';
+           // }else{
+              //      element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
+            //}
           // }
-
-
         });
-
+  */
     }
 
     reduceContrast();
