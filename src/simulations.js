@@ -413,7 +413,6 @@ Barriers['notPerceivable'] = notPerceivable;
 Barriers['badContrast'] = badContrast;
 
 
-alert(sessionStorage.getItem('barrier'));
 if (sessionStorage.getItem('barrier')){
     Barriers[sessionStorage.getItem('barrier')]();
 }
@@ -434,7 +433,6 @@ document.querySelector('html').addEventListener("drop", function( event ) {
     setTimeout(function() {
         Barriers[barrier](()=>{
             sessionStorage.setItem('barrier' , barrier);
-           alert(sessionStorage.getItem('barrier'));
             cb();
         });
     }, 100);
