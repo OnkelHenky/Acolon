@@ -6,6 +6,7 @@
  * A dictionary with all supported barriers simulations
  * @type {{}}
  */
+
 let Barriers = {};
 
 let node = document.createElement("div");
@@ -326,10 +327,10 @@ let badContrast = function (cb) {
 
 
     function reduceContrast(){
-       // let textNodes = getTextNodesIn(document.querySelector("body"));
-      let textNodes = document.querySelector("body *[style]");
+        let textNodes = getTextNodesIn(document.querySelector("body"));
+    //  let textNodes = document.querySelector("body *[style]");
         console.dir(textNodes);
-/*
+
         function getTextNodesIn(root_node) {
             let nodes_with_text = [];
             for (let parent = root_node.firstChild; parent; parent = parent.nextSibling) {
@@ -367,7 +368,7 @@ let badContrast = function (cb) {
                 console.log(BColor +' ' +FColor+ ' : '+contrastRatio);
             //    if(getLuminance(BColor) !== 0 || getLuminance(BColor) !== 1 ){
                //     let newFColor = colorLuminance(FColor,0.5);
-                    console.log('FColor: '+BColor);
+                console.log('FColor: '+BColor);
                //     console.log('newFColor: '+newFColor);
                     //element.parentElement.style.color = newFColor;
                     //element.style.cssText += 'color: '+ newFColor + ';';
@@ -380,9 +381,9 @@ let badContrast = function (cb) {
            // }else{
               //      element.parentElement.style.cssText += 'color: #f0ffff';// + newFColor + ';';
             //}
-          // }
+            //}
         });
-  */
+
     }
 
     reduceContrast();
@@ -411,6 +412,14 @@ Barriers['noMousePointer'] = noMousePointer;
 Barriers['notPerceivable'] = notPerceivable;
 Barriers['badContrast'] = badContrast;
 
+
+alert(sessionStorage.getItem('barrier'));
+if (sessionStorage.getItem('barrier')){
+    Barriers[sessionStorage.getItem('barrier')]();
+}
+
+
+
 /**
  * Event handler for "drop-events"
  */
@@ -424,6 +433,8 @@ document.querySelector('html').addEventListener("drop", function( event ) {
     };
     setTimeout(function() {
         Barriers[barrier](()=>{
+            sessionStorage.setItem('barrier' , barrier);
+           alert(sessionStorage.getItem('barrier'));
             cb();
         });
     }, 100);
@@ -453,3 +464,4 @@ document.querySelector('html').addEventListener("dragleave", function( event ) {
     //}
 
 }, false);
+
