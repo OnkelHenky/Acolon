@@ -8,6 +8,12 @@
  * Adding all the event handlers for the draggable elements
  */
 document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('clearBarriers').addEventListener('click', function () {
+        chrome.tabs.executeScript(
+            {
+                file: 'src/test.js'
+            });
+    });
     /* events fired on the draggable target */
     let draggableElements = document.querySelectorAll('.draggable');
     draggableElements.forEach((element)=>{
@@ -29,4 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }, false);
 
     });
+
+
+
 });
+
+

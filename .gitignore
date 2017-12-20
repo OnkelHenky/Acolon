@@ -92,3 +92,5 @@ $RECYCLE.BIN/
 *.lnk
 
 .idea/
+/test
+/src/backgound.js

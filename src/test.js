@@ -1,0 +1,3 @@
+(function clearBarriers(){
+    sessionStorage.clear();
+}());
